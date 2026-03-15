@@ -2,12 +2,13 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main 
+    branches: [ "main" ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -24,16 +25,13 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          PUBLIC_URL: /forms-steps  
+          PUBLIC_URL: /forms-steps
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          destination_dir: .
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
-          commit_message: 'Deploy to GitHub Pages'
-          force_orphan: true 
-          enable_jekyll: false
+          folder: dist  
+          branch: gh-pages
+          clean: true
+          clean-exclude: |
+            .nojekyll
